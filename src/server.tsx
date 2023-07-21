@@ -34,11 +34,15 @@ app.get("/", (req, res) => {
 });
 
 app.put("/api", (req, res) => {
-  const text = z.string().trim().nonempty().parse(req.body.todo);
+  const todoInput = z.string().trim().nonempty().safeParse(req.body.todo);
+  if (!todoInput.success) {
+    res.send(<TodoForm error={todoInput.error.issues[0].message} />);
+    return;
+  }
   const id = uuidv4();
   const todo = {
     id,
-    text,
+    text: todoInput.data,
     completed: false,
   };
   todos.set(id, todo);

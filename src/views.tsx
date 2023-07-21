@@ -22,7 +22,7 @@ export const TodoApp = ({ todos, count }: { todos: Todo[]; count: number }) => (
   </div>
 );
 
-export const TodoForm = () => (
+export const TodoForm = (props: { error?: string }) => (
   <form
     id="todo-form"
     hx-put="/api"
@@ -37,6 +37,9 @@ export const TodoForm = () => (
       autofocus
       class="w-full p-2 outline-none ring-1 ring-inset focus:shadow-[2px_2px_0_0_black] focus:ring-2"
     />
+    {!!props.error && (
+      <p class="mt-1 text-sm italic text-red-500">{props.error}</p>
+    )}
   </form>
 );
 
