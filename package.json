@@ -1,0 +1,37 @@
+{
+  "name": "htmx-todo",
+  "version": "0.0.2",
+  "description": "TodoMVC'ish app implemented using htmx and JSX",
+  "author": "Miks Ramāns",
+  "private": true,
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "conc -P \"npm:build -- {1}\" \"nodemon -q dist/server.js\" -- --watch",
+    "build": "conc -P \"npx tsc --preserveWatchOutput {@}\" \"npx tailwindcss -i ./src/global.css -o ./dist/css/styles.css {@}\" --",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0",
+    "vhtml": "^2.2.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.4.2",
+    "@types/uuid": "^9.0.2",
+    "@types/vhtml": "^2.2.4",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.4.1",
+    "tailwindcss": "^3.3.3",
+    "typescript": "^5.1.6"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-tailwindcss"
+    ]
+  }
+}
