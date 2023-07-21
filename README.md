@@ -6,4 +6,18 @@
 
 typescript / node.js / express / htmx / vhtml / tailwindcss / zod
 
+## How to run
+
+```shell
+npm ci
+npm run build
+npm run start
+```
+
+## Development
+
+```shell
+npm run dev
+```
+
 ![Created with HTMX](https://htmx.org/img/createdwith.jpeg)
