@@ -5,7 +5,14 @@ import { v4 as uuidv4 } from "uuid";
 import h from "vhtml";
 import { z } from "zod";
 import { Document } from "./document";
-import { Count, TodoApp, TodoForm, TodoItem } from "./views";
+import {
+  Count,
+  TodoApp,
+  TodoFilters,
+  TodoForm,
+  TodoItem,
+  TodoList,
+} from "./views";
 
 configDotenv();
 
@@ -26,14 +33,72 @@ export type Todo = {
 const todos = new Map<string, Todo>(); // In-memory database
 
 app.get("/", (req, res) => {
-  res.send(
-    <Document>
-      <TodoApp todos={[...todos.values()]} count={todos.size} />
-    </Document>,
-  );
+  if (req.headers["hx-boosted"]) {
+    res.send(
+      <>
+        <TodoList todos={[...todos.values()]} />
+        <TodoFilters currentFilter="all" />
+      </>,
+    );
+  } else {
+    res.send(
+      <Document>
+        <TodoApp
+          todos={[...todos.values()]}
+          count={todos.size}
+          currentFilter="all"
+        />
+      </Document>,
+    );
+  }
+});
+
+app.get("/active", (req, res) => {
+  const filteredTodos = [...todos.values()].filter((todo) => !todo.completed);
+  if (req.headers["hx-boosted"]) {
+    res.send(
+      <>
+        <TodoList todos={filteredTodos} />
+        <TodoFilters currentFilter="active" />
+      </>,
+    );
+  } else {
+    res.send(
+      <Document>
+        <TodoApp
+          todos={filteredTodos}
+          count={todos.size}
+          currentFilter="active"
+        />
+      </Document>,
+    );
+  }
+});
+
+app.get("/completed", (req, res) => {
+  const filteredTodos = [...todos.values()].filter((todo) => todo.completed);
+  if (req.headers["hx-boosted"]) {
+    res.send(
+      <>
+        <TodoList todos={filteredTodos} />
+        <TodoFilters currentFilter="completed" />
+      </>,
+    );
+  } else {
+    res.send(
+      <Document>
+        <TodoApp
+          todos={filteredTodos}
+          count={todos.size}
+          currentFilter="completed"
+        />
+      </Document>,
+    );
+  }
 });
 
 app.put("/api", (req, res) => {
+  console.log(req.headers);
   const todoInput = z.string().trim().nonempty().safeParse(req.body.todo);
   if (!todoInput.success) {
     res.send(<TodoForm error={todoInput.error.issues[0].message} />);
